@@ -49,9 +49,9 @@ pip install -r requirements.txt
 ### Method 1: Dual Terminal Setup
 ```bash
 # Terminal 1: Start FastAPI backend (http://localhost:8000)
-uvicorn backend.server:app --reload
+ uvicorn server:app --reload  
 
 # Terminal 2: Start Streamlit frontend (http://localhost:8501)
-streamlit run frontend/app.py
+streamlit run app.py
 
 
