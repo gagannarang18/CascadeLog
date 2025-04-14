@@ -1,0 +1,8 @@
+source,log_message,target_label
+auth,"User session timed out unexpectedly, user ID: 9250.",Security Alert
+system,The 'ReportGenerator' module will be retired in version 4.0.,Unclassified
+infra,System reboot initiated by user 12345.,System Notification
+network,Connection dropped unexpectedly during file upload.,Error
+app,Login attempt failed due to incorrect password.,Security Alert
+auth,Password changed successfully for user 1023.,Security Alert
+infra,Disk space critically low on server srv-13.,Unclassified
