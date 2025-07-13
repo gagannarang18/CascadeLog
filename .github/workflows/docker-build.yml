@@ -1,0 +1,25 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [main]  # change to 'master' if your repo uses that
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Build and Push Docker image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/cascade-log:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/cascade-log:latest
+
