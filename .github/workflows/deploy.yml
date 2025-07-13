@@ -29,7 +29,7 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        timeout: 600
+        timeout: 30m
         script: |
           docker pull ${{ secrets.DOCKER_IMAGE }}
           docker stop cascadelog || true
