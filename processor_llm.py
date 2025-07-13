@@ -1,16 +1,22 @@
+import os
+import re
 from dotenv import load_dotenv
 from groq import Groq
-import json
-import re
 
-
-import os
 load_dotenv()
 
-groq = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Initialize Groq client with proxy workaround
+try:
+    groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+except TypeError:
+    # Fallback for proxy issues
+    from groq._base_client import SyncHttpxClientWrapper
+    groq_client = Groq(
+        api_key=os.getenv("GROQ_API_KEY"),
+        http_client=SyncHttpxClientWrapper(proxies=None)
+    )
 
-
-def classify_with_llm(log_msg):
+def classify_with_llm(log_msg: str) -> str:
     """
     Generate a variant of the input sentence. For example,
     If input sentence is "User session timed out unexpectedly, user ID: 9250.",
@@ -22,10 +28,9 @@ def classify_with_llm(log_msg):
     Put the category inside <category> </category> tags. 
     Log message: {log_msg}'''
 
-    chat_completion = groq.chat.completions.create(
+    chat_completion = groq_client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
-        # model="llama-3.3-70b-versatile",
-        model="deepseek-r1-distill-llama-70b",
+        model="gemma2-9b-it",
         temperature=0.5
     )
 
