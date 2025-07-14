@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
-from classify import classify
+import requests
 from io import BytesIO
+import os
+import time
 
 # Set page config
 st.set_page_config(
@@ -10,6 +12,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Get API URL from environment variable
+FASTAPI_URL = os.getenv("FASTAPI_URL", "/api")
+
 
 # Custom CSS styling
 st.markdown("""
@@ -79,43 +85,46 @@ def main():
                     st.dataframe(df.head(10), use_container_width=True)
 
                 if st.button("⚡ Run Cascade Analysis", type="primary"):
-                    with st.spinner("🔍 Stage 1/3: Running regex pattern matching..."):
-                        import time
-                        time.sleep(1.5)
+                    with st.spinner("🔍 Processing logs through API..."):
+                        # Send file to FastAPI
+                        files = {"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")}
+                        start_time = time.time()
+                        response = requests.post(
+                            f"{FASTAPI_URL}/classify/", 
+                            files=files
+                        )
+                        processing_time = time.time() - start_time
 
-                    with st.spinner("🤖 Stage 2/3: Analyzing with BERT embeddings..."):
-                        # Call local classify function
-                        logs = list(zip(df["source"], df["log_message"]))
-                        labels = classify(logs)
+                    if response.status_code == 200:
+                        st.success("🎉 Analysis Complete!")
+                        
+                        # Read result CSV
+                        result_df = pd.read_csv(BytesIO(response.content))
+                        
+                        col1, col2 = st.columns([2, 1])
+                        with col1:
+                            with st.expander("📊 Classification Results", expanded=True):
+                                st.dataframe(result_df, use_container_width=True)
 
-                    with st.spinner("✨ Finalizing results..."):
-                        df["target_label"] = labels
+                        with col2:
+                            st.subheader("📈 Performance Metrics")
+                            st.metric("Total Logs Processed", len(result_df))
+                            st.metric("Processing Time", f"{processing_time:.2f}s")
 
-                    st.success("🎉 Analysis Complete!")
+                            st.subheader("Label Distribution")
+                            label_counts = result_df['target_label'].value_counts()
+                            st.bar_chart(label_counts)
 
-                    col1, col2 = st.columns([2, 1])
-                    with col1:
-                        with st.expander("📊 Classification Results", expanded=True):
-                            st.dataframe(df, use_container_width=True)
-
-                    with col2:
-                        st.subheader("📈 Performance Metrics")
-                        st.metric("Total Logs Processed", len(df))
-                        st.metric("Avg Processing Time", "0.4s/log")
-
-                        st.subheader("Label Distribution")
-                        label_counts = df['target_label'].value_counts()
-                        st.bar_chart(label_counts)
-
-                    # Download result
-                    csv = df.to_csv(index=False).encode('utf-8')
-                    st.download_button(
-                        label="📥 Download Full Report",
-                        data=csv,
-                        file_name="cascadelog_results.csv",
-                        mime="text/csv"
-                    )
-
+                        # Download result
+                        csv = result_df.to_csv(index=False).encode('utf-8')
+                        st.download_button(
+                            label="📥 Download Full Report",
+                            data=csv,
+                            file_name="cascadelog_results.csv",
+                            mime="text/csv"
+                        )
+                    else:
+                        st.error(f"❌ API Error: {response.text}")
             else:
                 st.error("⚠️ Missing required columns: 'source' and 'log_message'")
         except Exception as e:
