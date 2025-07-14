@@ -1,8 +1,24 @@
+# Python cache files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.db
+
+# Environment files
 .env
+
+# Database or local outputs
+*.db
 resources/output.csv
+
+# Large local datasets (won't go inside container)
 training/dataset/
+
+# Git & system files
+.git
+.gitignore
+.DS_Store
+
+# Logs (if any)
+*.log
+logs/
