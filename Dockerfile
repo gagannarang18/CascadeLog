@@ -8,5 +8,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . .
 
-# Use $PORT for Render dynamic port binding
-CMD ["streamlit", "run", "app.py", "--server.address=0.0.0.0", "--server.port=${PORT}"]
+EXPOSE 8501
+
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
