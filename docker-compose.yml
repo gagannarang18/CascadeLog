@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  fastapi:
+    build: .
+    command: gunicorn server:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - ENV=production
+
+  streamlit:
+    build: .
+    command: streamlit run app.py --server.address=0.0.0.0 --server.port=8501
+    ports:
+      - "8501:8501"
+    restart: always
+    environment:
+      - ENV=production
