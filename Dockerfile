@@ -4,12 +4,11 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt && \
+    apt-get update && apt-get install -y supervisor
 
 COPY . .
 
-# Optional: Create directories if needed
-RUN mkdir -p /app/resources
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 8000
-EXPOSE 8501
+CMD ["/usr/bin/supervisord"]
