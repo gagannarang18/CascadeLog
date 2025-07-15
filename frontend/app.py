@@ -4,6 +4,7 @@ import requests
 from io import BytesIO
 import os
 import time
+# st.write("Backend URL:", st.secrets["FASTAPI_URL"])
 
 # Set page config
 st.set_page_config(
@@ -13,8 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Get API URL from environment variable
-FASTAPI_URL = os.getenv("FASTAPI_URL", "/api")
+FASTAPI_URL = st.secrets["FASTAPI_URL"]
 
 
 # Custom CSS styling

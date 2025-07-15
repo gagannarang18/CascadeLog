@@ -17,3 +17,5 @@ joblib
 
 # Optional: for LLM integration (e.g., Groq or similar APIs)
 groq
+
+python-dotenv
