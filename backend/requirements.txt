@@ -1,0 +1,19 @@
+# FastAPI and related
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+
+# Data handling
+pandas
+requests
+
+# ML and NLP
+scikit-learn
+sentence-transformers
+transformers
+torch
+joblib
+
+# Optional: for LLM integration (e.g., Groq or similar APIs)
+groq

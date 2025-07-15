@@ -1,7 +1,0 @@
-**/__pycache__
-**/*.pyc
-.env
-.git
-*.ipynb          # ← Exclude notebooks
-*.csv            # ← Exclude local test files
-*.png
