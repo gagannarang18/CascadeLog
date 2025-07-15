@@ -1,6 +1,6 @@
-from backend.processor_regex import classify_with_regex
-from backend.processor_bert import classify_with_bert
-from backend.processor_llm import classify_with_llm
+from processor_regex import classify_with_regex
+from processor_bert import classify_with_bert
+from processor_llm import classify_with_llm
 
 def classify(logs):
     labels = []
