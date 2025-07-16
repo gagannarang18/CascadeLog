@@ -48,7 +48,32 @@ def main():
 
         *Maintain this format for optimal results*
         """)
-        sample_data = pd.read_csv("test.csv")
+        sample_data = pd.DataFrame({
+            "source": [
+                "ModernCRM",
+                "BillingSystem",
+                "AnalyticsEngine",
+                "AnalyticsEngine",
+                "ModernHR",
+                "ModernHR",
+                "LegacyCRM",
+                "LegacyCRM",
+                "LegacyCRM",
+                "LegacyCRM"
+            ],
+            "log_message": [
+                "IP 192.168.133.114 blocked due to potential attack",
+                "User 12345 logged in.",
+                "File data_6957.csv uploaded successfully by user User265.",
+                "Backup completed successfully.",
+                "GET /v2/54fadb412c4e40cdbaed9335e4c35a9e/servers/detail HTTP/1.1 RCODE  200 len: 1583 time: 0.1878400",
+                "Admin access escalation detected for user 9429",
+                "Case escalation for ticket ID 7324 failed because the assigned support agent is no longer active.",
+                "Invoice generation process aborted for order ID 8910 due to invalid tax calculation module.",
+                "The 'BulkEmailSender' feature is no longer supported. Use 'EmailCampaignManager' for improved functionality.",
+                "The 'ReportGenerator' module will be retired in version 4.0. Please migrate to the 'AdvancedAnalyticsSuite' by Dec 2025"
+            ]
+        })
         st.download_button(
             label="Download Sample CSV",
             data=sample_data.to_csv(index=False).encode('utf-8'),
