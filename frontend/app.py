@@ -48,20 +48,14 @@ def main():
 
         *Maintain this format for optimal results*
         """)
-        sample_data = pd.DataFrame({
-            "source": ["server", "network", "application"],
-            "log_message": [
-                "Error 503: Service unavailable",
-                "Connection timeout at 192.168.1.1",
-                "User login failed: invalid credentials"
-            ]
-        })
+        sample_data = pd.read_csv("test.csv")
         st.download_button(
             label="Download Sample CSV",
             data=sample_data.to_csv(index=False).encode('utf-8'),
             file_name="cascadelog_sample.csv",
             mime="text/csv"
         )
+
 
     # 🚀 Start Analysis
     st.header("🚀 Start Analysis")
