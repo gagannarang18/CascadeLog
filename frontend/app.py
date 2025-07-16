@@ -4,7 +4,6 @@ import requests
 from io import BytesIO
 import os
 import time
-# st.write("Backend URL:", st.secrets["FASTAPI_URL"])
 
 # Set page config
 st.set_page_config(
@@ -15,7 +14,6 @@ st.set_page_config(
 )
 
 FASTAPI_URL = st.secrets["FASTAPI_URL"]
-
 
 # Custom CSS styling
 st.markdown("""
@@ -31,7 +29,6 @@ st.markdown("""
 def main():
     st.markdown('<h1 class="header-text">⚡ CascadeLog : Multi-Stage Log Classification System</h1>', unsafe_allow_html=True)
 
-    # Architecture explanation
     with st.expander("📖 How It Works", expanded=False):
         st.markdown("""
         **Three-Tier Classification Architecture:**
@@ -43,13 +40,12 @@ def main():
            - GPT-based validation for ambiguous cases
         """)
 
-    # Sample CSV download
     with st.expander("📥 Download Sample CSV Format", expanded=False):
         st.markdown("""
         Required columns:
         - `source`: Log origin (e.g., server, network)
         - `log_message`: Raw log text
-        
+
         *Maintain this format for optimal results*
         """)
         sample_data = pd.DataFrame({
@@ -67,40 +63,38 @@ def main():
             mime="text/csv"
         )
 
-    # File upload section
+    # 🚀 Start Analysis
     st.header("🚀 Start Analysis")
     uploaded_file = st.file_uploader(
-        "Upload Logs CSV",
-        type=["csv"],
-        help="File must contain 'source' and 'log_message' columns"
+        "Upload Logs File",
+        type=None,  # Allows all file types (mobile-friendly)
+        help="Upload a file containing 'source' and 'log_message' columns"
     )
 
     if uploaded_file is not None:
+        if not uploaded_file.name.lower().endswith(".csv"):
+            st.warning("⚠️ This file doesn't seem to be a CSV. Proceeding anyway...")
+
         try:
             df = pd.read_csv(uploaded_file)
             if {"source", "log_message"}.issubset(df.columns):
                 st.success("✅ File validation passed!")
-                
+
                 with st.expander("🔍 Preview Uploaded Logs"):
                     st.dataframe(df.head(10), use_container_width=True)
 
                 if st.button("⚡ Run Cascade Analysis", type="primary"):
                     with st.spinner("🔍 Processing logs through API..."):
-                        # Send file to FastAPI
                         files = {"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")}
                         start_time = time.time()
-                        response = requests.post(
-                            f"{FASTAPI_URL}/classify/", 
-                            files=files
-                        )
+                        response = requests.post(f"{FASTAPI_URL}/classify/", files=files)
                         processing_time = time.time() - start_time
 
                     if response.status_code == 200:
                         st.success("🎉 Analysis Complete!")
-                        
-                        # Read result CSV
+
                         result_df = pd.read_csv(BytesIO(response.content))
-                        
+
                         col1, col2 = st.columns([2, 1])
                         with col1:
                             with st.expander("📊 Classification Results", expanded=True):
@@ -115,11 +109,9 @@ def main():
                             label_counts = result_df['target_label'].value_counts()
                             st.bar_chart(label_counts)
 
-                        # Download result
-                        csv = result_df.to_csv(index=False).encode('utf-8')
                         st.download_button(
                             label="📥 Download Full Report",
-                            data=csv,
+                            data=result_df.to_csv(index=False).encode('utf-8'),
                             file_name="cascadelog_results.csv",
                             mime="text/csv"
                         )
