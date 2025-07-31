@@ -1,5 +1,4 @@
-﻿
-# ⚡ CascadeLog 
+﻿# ⚡ CascadeLog 
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.95+-green)
@@ -8,15 +7,15 @@
 
 **Enterprise log analysis platform** that automatically categorizes system logs and generates actionable insights.
 
-![CascadeLog Demo](https://github.com/gagannarang18/Cassy/blob/main/resources/image.png) 
+🔗 **Live Demo:** [https://cascadelog.streamlit.app/](https://cascadelog.streamlit.app/)
 
 ## 🌟 Key Features
 
-- **Automatic log classification** with high accuracy
-- **Multi-source support** (servers, networks, applications)
-- **Interactive dashboard** with visual analytics
-- **Exportable reports** in CSV format
-- **REST API** for integration with other systems
+- **Automatic log classification** with high accuracy  
+- **Multi-source support** (servers, networks, applications)  
+- **Interactive dashboard** with visual analytics  
+- **Exportable reports** in CSV format  
+- **REST API** for integration with other systems  
 
 ## 🛠️ Tech Stack
 
@@ -42,16 +41,17 @@ cd CascadeLog
 
 # Install dependencies
 pip install -r requirements.txt
-
+```
 
 ## 🚀 Running the Application
 
 ### Method 1: Dual Terminal Setup
 ```bash
 # Terminal 1: Start FastAPI backend (http://localhost:8000)
- uvicorn server:app --reload  
+uvicorn server:app --reload  
+```
 
+```bash
 # Terminal 2: Start Streamlit frontend (http://localhost:8501)
 streamlit run app.py
-
-
+```
